@@ -1,29 +1,17 @@
 import pandas as pd
 import numpy as np
 import os
-import csv
 from src.dataset import load_dataset, get_mfcc_features
 from src.clustering import run_kmeans, evaluate_clusters
-
 os.makedirs('results', exist_ok=True)
-
 df = load_dataset()
 X, _ = get_mfcc_features(df)
-
-# Test K=3 to 12 → Save GitHub-ready CSV
 scores = []
 for k in range(3, 13):
     _, labels = run_kmeans(X, k)
     score = evaluate_clusters(X, labels)
     score['k'] = k
     scores.append(score)
-    print(f"K={k}: Silhouette={score['silhouette']:.3f}")
-
 df_scores = pd.DataFrame(scores).set_index('k')
-
-# FIXED: Proper GitHub CSV rendering
-df_scores.to_csv('results/clustering_metrics.csv', 
-                 quoting=csv.QUOTE_NONNUMERIC, 
-                 index_label='k')
-
+df_scores.to_csv('results/clustering_metrics.csv', index_label='k')
 print(df_scores.round(4))
