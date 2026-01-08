@@ -9,9 +9,9 @@ X, _ = get_mfcc_features(df)
 scores = []
 for k in range(3, 13):
     _, labels = run_kmeans(X, k)   
-    score = evaluate_clusters(X, labels)
-    row = {'k': k, **score}
+    score_dict = dict(evaluate_clusters(X, labels))
+    row = {'k': k, **score_dict}
     scores.append(row)
 df_scores = pd.DataFrame(scores).set_index('k')
 df_scores.to_csv('results/clustering_metrics.csv', index_label='k')
-print(df_scores.round(4))
+
