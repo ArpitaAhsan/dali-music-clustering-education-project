@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import os
-from src.dataset import load_dataset, get_mfcc_features  # Remove csv import
+from src.dataset import load_dataset, get_mfcc_features
 from src.clustering import run_kmeans, evaluate_clusters
 os.makedirs('results', exist_ok=True)
 df = load_dataset()
@@ -10,8 +10,9 @@ scores = []
 for k in range(3, 13):
     _, labels = run_kmeans(X, k)
     score = evaluate_clusters(X, labels)
-    score['k'] = k
-    scores.append(score)
+    # FIXED: Create dict with k FIRST
+    row = {'k': k, **score}
+    scores.append(row)
 df_scores = pd.DataFrame(scores).set_index('k')
 df_scores.to_csv('results/clustering_metrics.csv', index_label='k')
 print(df_scores.round(4))
