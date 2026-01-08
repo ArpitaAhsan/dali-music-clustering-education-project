@@ -8,9 +8,8 @@ df = load_dataset()
 X, _ = get_mfcc_features(df)
 scores = []
 for k in range(3, 13):
-    _, labels = run_kmeans(X, k)
+    _, labels = run_kmeans(X, k)   
     score = evaluate_clusters(X, labels)
-    # FIXED: Create dict with k FIRST
     row = {'k': k, **score}
     scores.append(row)
 df_scores = pd.DataFrame(scores).set_index('k')
